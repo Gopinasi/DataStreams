@@ -2,14 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Main extends JFrame {
+public class FileStream extends JFrame {
     private JTextArea original;
     private JTextArea filter;
     private JTextField searchField;
@@ -18,7 +17,7 @@ public class Main extends JFrame {
     private JButton quit;
     private Path loadedFilePath;
 
-    public Main() {
+    public FileStream() {
         setTitle("File Search Application");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,7 +62,7 @@ public class Main extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
-            File workingDirectory = new File(System.getProperty("user.dir"));
+            java.io.File workingDirectory = new java.io.File(System.getProperty("user.dir"));
             fileChooser.setCurrentDirectory(workingDirectory);
 
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -78,7 +77,7 @@ public class Main extends JFrame {
                 original.setText(content);
                 filter.setText("");  // Clear filtered area
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(Main.this, "Error loading file: " + ex.getMessage());
+                JOptionPane.showMessageDialog(FileStream.this, "Error loading file: " + ex.getMessage());
             }
         }
     }
@@ -87,13 +86,13 @@ public class Main extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loadedFilePath == null) {
-                JOptionPane.showMessageDialog(Main.this, "Please load a file first.");
+                JOptionPane.showMessageDialog(FileStream.this, "Please load a file first.");
                 return;
             }
 
             String searchString = searchField.getText().trim();
             if (searchString.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.this, "Please enter a search string.");
+                JOptionPane.showMessageDialog(FileStream.this, "Please enter a search string.");
                 return;
             }
 
@@ -105,12 +104,12 @@ public class Main extends JFrame {
                 String filteredContent = lines.filter(line -> line.contains(searchString)).collect(Collectors.joining("\n"));
                 filter.setText(filteredContent);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(Main.this, "Error reading file: " + ex.getMessage());
+                JOptionPane.showMessageDialog(FileStream.this, "Error reading file: " + ex.getMessage());
             }
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Main::new);
+        SwingUtilities.invokeLater(FileStream::new);
     }
 }
